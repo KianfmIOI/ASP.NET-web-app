@@ -1,0 +1,68 @@
+﻿@page
+@model ClassSubjectTeacher
+
+@{
+    var students = Model.Class.Students;
+    var dates = (List<DateTime>)ViewBag.Dates;
+    var attendance = (List<Attendance>)ViewBag.Attendance;
+}
+
+<h2>Attendance - @Model.Class.Name (@Model.Subject.SubjectName)</h2>
+
+<table class="table table-bordered text-center">
+    <thead>
+        <tr>
+            <th>Student</th>
+            @foreach (var date in dates)
+            {
+                <th>@date.ToString("MM/dd")</th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var student in students)
+        {
+            <tr>
+                <td>@student.Name</td>
+                @foreach (var date in dates)
+                {
+                    var record = attendance
+                        .FirstOrDefault(a => a.StudentId == student.Id && a.Date.Date == date.Date);
+
+                    var present = record?.IsPresent ?? false;
+                    <td class="attendance-cell"
+                        data-student="@student.Id"
+                        data-class="@Model.ClassId"
+                        data-subject="@Model.SubjectId"
+                        data-teacher="@Model.TeacherId"
+                        data-date="@date.ToString("yyyy-MM-dd")"
+                        style="cursor:pointer;">
+                        @(present ? "✔" : "✖")
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>
+
+<script>
+document.querySelectorAll(".attendance-cell").forEach(cell => {
+    cell.addEventListener("click", () => {
+        fetch("/Attendance/Toggle", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                studentId: cell.dataset.student,
+                classId: cell.dataset.class,
+                subjectId: cell.dataset.subject,
+                teacherId: cell.dataset.teacher,
+                date: cell.dataset.date
+            })
+        })
+        .then(r => r.json())
+        .then(present => {
+            cell.textContent = present ? "✔" : "✖";
+        });
+    });
+});
+</script>

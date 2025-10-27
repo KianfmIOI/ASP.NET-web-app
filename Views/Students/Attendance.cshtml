@@ -1,0 +1,32 @@
+﻿@model List<Attendance>
+
+<h2>Your Attendance</h2>
+
+<form method="get">
+    <label>Filter by Subject:</label>
+    <select name="subjectId" asp-items="ViewBag.Subjects" class="form-select" onchange="this.form.submit()">
+        <option value="">All Subjects</option>
+    </select>
+</form>
+
+<table class="table table-striped mt-3">
+    <thead>
+        <tr>
+            <th>Date</th>
+            <th>Status</th>
+            <th>Subject</th>
+            <th>Teacher</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var a in Model)
+        {
+                <tr>
+                    <td>@a.Date.ToString("yyyy-MM-dd")</td>
+                    <td>@(a.IsPresent ? "✔ Present" : "✖ Absent")</td>
+                    <td>@a.Subject.SubjectName</td>
+                    <td>@a.Teacher.FullName</td>
+                </tr>
+        }
+    </tbody>
+</table>
