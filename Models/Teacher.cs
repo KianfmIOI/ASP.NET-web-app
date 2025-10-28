@@ -22,7 +22,9 @@ namespace SchoolManagementWebApp.Models
         [Required]
         [Display(Name ="Social security number")]
         [StringLength(10)]
-        public string? SocialSecurity { get; set; } = string.Empty;
+        public string? SocialSecurity { get; set; } = null!;
+        [Display(Name = "Field of profession")]
+        public string FIeldOfProfession { get; set; } = null!;
         public ICollection<Grade> Grades { get; set; } = new List<Grade>();
 
         public ICollection<ClassSubjectTeacher> ClassSubjectTeachers { get; set; } = new List<ClassSubjectTeacher>();

@@ -1,4 +1,4 @@
-﻿@model SchoolManagementWebApp.Models.Subject
+﻿@model SchoolManagementWebApp.Models.StaffRole
 
 @{
     ViewData["Title"] = "Edit";
@@ -6,7 +6,7 @@
 
 <h1>Edit</h1>
 
-<h4>Subject</h4>
+<h4>StaffRole</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -14,9 +14,9 @@
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
             <div class="form-group">
-                <label asp-for="SubjectName" class="control-label"></label>
-                <input asp-for="SubjectName" class="form-control" />
-                <span asp-validation-for="SubjectName" class="text-danger"></span>
+                <label asp-for="RoleName" class="control-label"></label>
+                <input asp-for="RoleName" class="form-control" />
+                <span asp-validation-for="RoleName" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />

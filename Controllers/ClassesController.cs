@@ -34,11 +34,11 @@ namespace SchoolManagementWebApp.Controllers
             }
 
             var @class = await _context.Classes
-                .Include(c => c.Students)
-                .Include(c => c.ClassSubjectTeachers)
-                  .ThenInclude(cst => cst.Teacher)
-                .Include(c => c.ClassSubjectTeachers)
-                    .ThenInclude(cst => cst.Subject)
+                .Include(s=>s.Students)
+                .Include(cst=>cst.ClassSubjectTeachers)
+                .ThenInclude(t=>t.Teacher)
+                .Include(cst=>cst.ClassSubjectTeachers)
+                .ThenInclude(s=>s.Subject)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (@class == null)
             {

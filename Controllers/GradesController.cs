@@ -49,26 +49,13 @@ namespace SchoolManagementWebApp.Controllers
         }
 
         // GET: Grades/Create
-        public async Task<IActionResult> Create(int cstId)
+        public IActionResult Create()
         {
-            var cst = await _context.ClassSubjectTeachers
-                .Include(x => x.Class).ThenInclude(c => c.Students)
-                .Include(x => x.Subject)
-                .Include(x => x.Teacher)
-                .FirstOrDefaultAsync(x => x.Id == cstId);
-
-            if (cst == null) return NotFound();
-
-            ViewBag.Students = new SelectList(cst.Class.Students, "Id", "Name");
-            ViewBag.SubjectName = cst.Subject.SubjectName;
-            ViewBag.ClassName = cst.Class.Name;
-
-            return View(new Grade
-            {
-                ClassId = cst.ClassId,
-                SubjectId = cst.SubjectId,
-                TeacherId = cst.TeacherId
-            });
+            ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Name");
+            ViewData["StudentId"] = new SelectList(_context.Students, "Id", "Name");
+            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "SubjectName");
+            ViewData["TeacherId"] = new SelectList(_context.Teachers, "Id", "FullName");
+            return View();
         }
 
         // POST: Grades/Create
@@ -76,16 +63,19 @@ namespace SchoolManagementWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create(Grade grade)
+        public async Task<IActionResult> Create([Bind("Id,StudentId,TeacherId,SubjectId,ClassId,comment,Score,DateAssigned")] Grade grade)
         {
-            if (!ModelState.IsValid)
-                return View(grade);
-
-
-            _context.Grades.Add(grade);
-            await _context.SaveChangesAsync();
-
-            return RedirectToAction("Details", "Class", new { id = grade.ClassId });
+            if (ModelState.IsValid)
+            {
+                _context.Add(grade);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Index));
+            }
+            ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Name", grade.ClassId);
+            ViewData["StudentId"] = new SelectList(_context.Students, "Id", "Name", grade.StudentId);
+            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "SubjectName", grade.SubjectId);
+            ViewData["TeacherId"] = new SelectList(_context.Teachers, "Id", "FullName", grade.TeacherId);
+            return View(grade);
         }
 
         // GET: Grades/Edit/5
@@ -101,9 +91,10 @@ namespace SchoolManagementWebApp.Controllers
             {
                 return NotFound();
             }
-            ViewBag.StudentName = grade.Student.Name;
-            ViewBag.SubjectName = grade.Subject.SubjectName;
-            ViewBag.TeacherName = grade.Teacher.FullName;
+            ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Name", grade.ClassId);
+            ViewData["StudentId"] = new SelectList(_context.Students, "Id", "Name", grade.StudentId);
+            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "SubjectName", grade.SubjectId);
+            ViewData["TeacherId"] = new SelectList(_context.Teachers, "Id", "FullName", grade.TeacherId);
             return View(grade);
         }
 
@@ -140,8 +131,8 @@ namespace SchoolManagementWebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Name", grade.ClassId);
-            ViewData["StudentId"] = new SelectList(_context.Students, "Id", "FatherName", grade.StudentId);
-            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Id", grade.SubjectId);
+            ViewData["StudentId"] = new SelectList(_context.Students, "Id", "Name", grade.StudentId);
+            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "SubjectName", grade.SubjectId);
             ViewData["TeacherId"] = new SelectList(_context.Teachers, "Id", "FullName", grade.TeacherId);
             return View(grade);
         }
@@ -156,7 +147,7 @@ namespace SchoolManagementWebApp.Controllers
 
             var grade = await _context.Grades
                 .Include(g => g.Class)
-                .Include(g => g.Student)
+                .ThenInclude(g => g.Students)
                 .Include(g => g.Subject)
                 .Include(g => g.Teacher)
                 .FirstOrDefaultAsync(m => m.Id == id);

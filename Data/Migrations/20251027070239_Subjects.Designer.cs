@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SchoolManagementWebApp.Data;
 
@@ -11,9 +12,11 @@ using SchoolManagementWebApp.Data;
 namespace SchoolManagementWebApp.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251027070239_Subjects")]
+    partial class Subjects
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -367,47 +370,6 @@ namespace SchoolManagementWebApp.Data.Migrations
                     b.ToTable("Grades");
                 });
 
-            modelBuilder.Entity("SchoolManagementWebApp.Models.Staff", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<DateTime>("DateOfBirth")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("StaffRoleId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StaffRoleId");
-
-                    b.ToTable("Staffs");
-                });
-
-            modelBuilder.Entity("SchoolManagementWebApp.Models.StaffRole", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("RoleName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("StaffRoles");
-                });
-
             modelBuilder.Entity("SchoolManagementWebApp.Models.Student", b =>
                 {
                     b.Property<int>("Id")
@@ -455,12 +417,9 @@ namespace SchoolManagementWebApp.Data.Migrations
 
                     b.Property<string>("SubjectName")
                         .IsRequired()
-                        .HasColumnType("nvarchar(450)");
+                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("SubjectName")
-                        .IsUnique();
 
                     b.ToTable("Subjects");
                 });
@@ -475,10 +434,6 @@ namespace SchoolManagementWebApp.Data.Migrations
 
                     b.Property<DateTime>("DateOfBirth")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("FIeldOfProfession")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FullName")
                         .IsRequired()
@@ -645,17 +600,6 @@ namespace SchoolManagementWebApp.Data.Migrations
                     b.Navigation("Teacher");
                 });
 
-            modelBuilder.Entity("SchoolManagementWebApp.Models.Staff", b =>
-                {
-                    b.HasOne("SchoolManagementWebApp.Models.StaffRole", "StaffRole")
-                        .WithMany("Staffs")
-                        .HasForeignKey("StaffRoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("StaffRole");
-                });
-
             modelBuilder.Entity("SchoolManagementWebApp.Models.Student", b =>
                 {
                     b.HasOne("SchoolManagementWebApp.Models.Class", "Class")
@@ -670,11 +614,6 @@ namespace SchoolManagementWebApp.Data.Migrations
                     b.Navigation("ClassSubjectTeachers");
 
                     b.Navigation("Students");
-                });
-
-            modelBuilder.Entity("SchoolManagementWebApp.Models.StaffRole", b =>
-                {
-                    b.Navigation("Staffs");
                 });
 
             modelBuilder.Entity("SchoolManagementWebApp.Models.Student", b =>

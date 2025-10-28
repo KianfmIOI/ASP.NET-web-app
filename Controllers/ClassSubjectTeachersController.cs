@@ -22,7 +22,10 @@ namespace SchoolManagementWebApp.Controllers
         // GET: ClassSubjectTeachers
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.ClassSubjectTeachers.Include(c => c.Class).Include(c => c.Subject).Include(c => c.Teacher);
+            var applicationDbContext = _context.ClassSubjectTeachers
+                .Include(c => c.Class)
+                .Include(c => c.Subject)
+                .Include(c => c.Teacher);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -38,6 +41,8 @@ namespace SchoolManagementWebApp.Controllers
                 .Include(c => c.Class)
                 .Include(c => c.Subject)
                 .Include(c => c.Teacher)
+                .OrderBy(c=>c.ClassId)
+                .ThenBy(s=>s.SubjectId)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (classSubjectTeacher == null)
             {
@@ -51,7 +56,7 @@ namespace SchoolManagementWebApp.Controllers
         public IActionResult Create()
         {
             ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Name");
-            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Id");
+            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "SubjectName");
             ViewData["TeacherId"] = new SelectList(_context.Teachers, "Id", "FullName");
             return View();
         }
@@ -70,7 +75,7 @@ namespace SchoolManagementWebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Name", classSubjectTeacher.ClassId);
-            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Id", classSubjectTeacher.SubjectId);
+            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "SubjectName", classSubjectTeacher.SubjectId);
             ViewData["TeacherId"] = new SelectList(_context.Teachers, "Id", "FullName", classSubjectTeacher.TeacherId);
             return View(classSubjectTeacher);
         }
@@ -89,7 +94,7 @@ namespace SchoolManagementWebApp.Controllers
                 return NotFound();
             }
             ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Name", classSubjectTeacher.ClassId);
-            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Id", classSubjectTeacher.SubjectId);
+            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "SubjectName", classSubjectTeacher.SubjectId);
             ViewData["TeacherId"] = new SelectList(_context.Teachers, "Id", "FullName", classSubjectTeacher.TeacherId);
             return View(classSubjectTeacher);
         }
@@ -127,7 +132,7 @@ namespace SchoolManagementWebApp.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["ClassId"] = new SelectList(_context.Classes, "Id", "Name", classSubjectTeacher.ClassId);
-            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "Id", classSubjectTeacher.SubjectId);
+            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "SubjectName", classSubjectTeacher.SubjectId);
             ViewData["TeacherId"] = new SelectList(_context.Teachers, "Id", "FullName", classSubjectTeacher.TeacherId);
             return View(classSubjectTeacher);
         }

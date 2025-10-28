@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NuGet.DependencyResolver;
 using SchoolManagementWebApp.Data;
 using SchoolManagementWebApp.Models;
 
@@ -56,6 +57,14 @@ namespace SchoolManagementWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,SubjectName")] Subject subject)
         {
+            bool subjectExists = await _context.Subjects
+                .AnyAsync(t => t.SubjectName == subject.SubjectName);
+
+            if (subjectExists)
+            {
+                ModelState.AddModelError("SubjectName", "A Subject with this name already exists.");
+                return View(subject);
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(subject);

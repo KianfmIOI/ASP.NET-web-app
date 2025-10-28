@@ -10,8 +10,7 @@ namespace SchoolManagementWebApp.Models
 
         [Required]
         [Display(Name = "Subject")]
-        public SubjectName SubjectName { get; set; }
-
+        public string SubjectName { get; set; } = null!;
         public ICollection<ClassSubjectTeacher> ClassSubjectTeachers { get; set; } = new List<ClassSubjectTeacher>();
     }
 }

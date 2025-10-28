@@ -10,22 +10,32 @@ using SchoolManagementWebApp.Models;
 
 namespace SchoolManagementWebApp.Controllers
 {
-    public class TeachersController : Controller
+    public class StaffsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public TeachersController(ApplicationDbContext context)
+        public StaffsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Teachers
+        // GET: Staffs
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Teachers.ToListAsync());
-        }
+            var staff = await _context.Staffs 
+                .Include(s => s.StaffRole)
+                .ToListAsync();
+            var teachers =await _context.Teachers
+                .OrderBy(fn=>fn.FIeldOfProfession)
+                .ToListAsync();
 
-        // GET: Teachers/Details/5
+            ViewBag.teachers = teachers;
+
+            return View(staff);
+        }
+        
+
+        // GET: Staffs/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,41 +43,42 @@ namespace SchoolManagementWebApp.Controllers
                 return NotFound();
             }
 
-            var teacher = await _context.Teachers
-                .OrderBy(n=>n.FullName)
-                .ThenBy(s=>s.SocialSecurity)
+            var staff = await _context.Staffs
+                .Include(s => s.StaffRole)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (teacher == null)
+            if (staff == null)
             {
                 return NotFound();
             }
 
-            return View(teacher);
+            return View(staff);
         }
 
-        // GET: Teachers/Create
+        // GET: Staffs/Create
         public IActionResult Create()
         {
+            ViewData["StaffRoleId"] = new SelectList(_context.StaffRoles, "Id", "RoleName");
             return View();
         }
 
-        // POST: Teachers/Create
+        // POST: Staffs/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,FullName,DateOfBirth,SocialSecurity,FIeldOfProfession")] Teacher teacher)
+        public async Task<IActionResult> Create([Bind("Id,Name,StaffRoleId,DateOfBirth")] Staff staff)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(teacher);
+                _context.Add(staff);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(teacher);
+            ViewData["StaffRoleId"] = new SelectList(_context.StaffRoles, "Id", "RoleName", staff.StaffRoleId);
+            return View(staff);
         }
 
-        // GET: Teachers/Edit/5
+        // GET: Staffs/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -75,22 +86,23 @@ namespace SchoolManagementWebApp.Controllers
                 return NotFound();
             }
 
-            var teacher = await _context.Teachers.FindAsync(id);
-            if (teacher == null)
+            var staff = await _context.Staffs.FindAsync(id);
+            if (staff == null)
             {
                 return NotFound();
             }
-            return View(teacher);
+            ViewData["StaffRoleId"] = new SelectList(_context.StaffRoles, "Id", "Id", staff.StaffRoleId);
+            return View(staff);
         }
 
-        // POST: Teachers/Edit/5
+        // POST: Staffs/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,FullName,DateOfBirth,SocialSecurity,FIeldOfProfession")] Teacher teacher)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,StaffRoleId,DateOfBirth")] Staff staff)
         {
-            if (id != teacher.Id)
+            if (id != staff.Id)
             {
                 return NotFound();
             }
@@ -99,12 +111,12 @@ namespace SchoolManagementWebApp.Controllers
             {
                 try
                 {
-                    _context.Update(teacher);
+                    _context.Update(staff);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!TeacherExists(teacher.Id))
+                    if (!StaffExists(staff.Id))
                     {
                         return NotFound();
                     }
@@ -115,10 +127,11 @@ namespace SchoolManagementWebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(teacher);
+            ViewData["StaffRoleId"] = new SelectList(_context.StaffRoles, "Id", "Id", staff.StaffRoleId);
+            return View(staff);
         }
 
-        // GET: Teachers/Delete/5
+        // GET: Staffs/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -126,34 +139,35 @@ namespace SchoolManagementWebApp.Controllers
                 return NotFound();
             }
 
-            var teacher = await _context.Teachers
+            var staff = await _context.Staffs
+                .Include(s => s.StaffRole)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (teacher == null)
+            if (staff == null)
             {
                 return NotFound();
             }
 
-            return View(teacher);
+            return View(staff);
         }
 
-        // POST: Teachers/Delete/5
+        // POST: Staffs/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var teacher = await _context.Teachers.FindAsync(id);
-            if (teacher != null)
+            var staff = await _context.Staffs.FindAsync(id);
+            if (staff != null)
             {
-                _context.Teachers.Remove(teacher);
+                _context.Staffs.Remove(staff);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool TeacherExists(int id)
+        private bool StaffExists(int id)
         {
-            return _context.Teachers.Any(e => e.Id == id);
+            return _context.Staffs.Any(e => e.Id == id);
         }
     }
 }

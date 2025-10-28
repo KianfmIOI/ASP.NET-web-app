@@ -42,6 +42,40 @@
         </dd>
     </dl>
 </div>
+<h1>Grades</h1>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Teacher's Name
+            </th>
+            <th>
+                Subject
+            </th>
+            <th>Score</th>
+            <th>Comment</th>
+        </tr>
+    <tbody>
+            @foreach (var s in Model.Grades)
+            {
+                    <tr>
+                        <td>
+                        @Html.DisplayFor(modelItem => s.Teacher.FullName)
+                        </td>
+                            <td>
+                        @Html.DisplayFor(modelItem => s.Subject.SubjectName)
+                            </td>
+                                <td>
+                        @Html.DisplayFor(modelItem => s.Score)
+                                </td>
+                                    <td>
+                        @Html.DisplayFor(modelItem => s.comment)
+                                    </td>
+                    </tr>
+            }
+    </tbody>
+</table>
 <div>
     <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>

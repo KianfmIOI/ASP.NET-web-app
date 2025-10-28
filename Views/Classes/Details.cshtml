@@ -23,28 +23,28 @@
 <h1>Teachers</h1>
 
 <table class="table">
-	<thead>
-		<tr>
-			<th>
-				Teacher's Name
-			</th>
-			<th>
-				Subject
-			</th>
-		</tr>
+    <thead>
+        <tr>
+            <th>
+                Teacher's Name
+            </th>
+            <th>
+                Subject
+            </th>
+        </tr>
     <tbody>
-        @foreach (var s in Model.ClassSubjectTeachers ?? Enumerable.Empty<ClassSubjectTeacher>())
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => s.Teacher.FullName )
-                </td>
+            @foreach (var s in Model.ClassSubjectTeachers)
+            {
+                <tr>
                     <td>
-                    @Html.DisplayFor(modelItem => s.Subject.SubjectName)
+                        @Html.DisplayFor(modelItem => s.Teacher.FullName)
                     </td>
-                
-            </tr>
-        }
+                        <td>
+                        @Html.DisplayFor(modelItem => s.Subject.SubjectName)
+                        </td>
+
+                </tr>
+            }
     </tbody>
 </table>
 <h1>Students</h1>
@@ -62,15 +62,15 @@
     <tbody>
             @foreach (var s in Model.Students)
             {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => s.Name)
-                    </td>
+                    <tr>
                         <td>
-                        @Html.DisplayFor(modelItem => s.FatherName)
+                        @Html.DisplayFor(modelItem => s.Name)
                         </td>
+                            <td>
+                        @Html.DisplayFor(modelItem => s.FatherName)
+                            </td>
 
-                </tr>
+                    </tr>
             }
     </tbody>
 </table>

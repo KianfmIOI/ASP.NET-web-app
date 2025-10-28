@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using NuGet.DependencyResolver;
 using SchoolManagementWebApp.Data;
 using SchoolManagementWebApp.Models;
 
@@ -18,42 +19,11 @@ namespace SchoolManagementWebApp.Controllers
         {
             _context = context;
         }
-        public async Task<IActionResult> Attendance(int id, int? subjectId)
-        {
-            var student = await _context.Students
-                .Include(s => s.Class)
-                .FirstOrDefaultAsync(s => s.Id == id);
-
-            if (student == null) return NotFound();
-
-            var query = _context.Attendances
-                .Include(a => a.Subject)
-                .Include(a => a.Teacher)
-                .Where(a => a.StudentId == id);
-
-            if (subjectId.HasValue)
-                query = query.Where(a => a.SubjectId == subjectId);
-
-            var records = await query
-                .OrderBy(a => a.Date)
-                .ToListAsync();
-
-            ViewBag.Subjects = new SelectList(
-                _context.ClassSubjectTeachers
-                    .Where(cst => cst.ClassId == student.ClassId)
-                    .Select(cst => cst.Subject),
-                "Id",
-                "SubjectName",
-                subjectId
-            );
-
-            return View(records);
-        }
 
         // GET: Students
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Students.Include(s => s.Class);
+            var applicationDbContext = _context.Students.Include(s => s.Class).OrderBy(n=>n.Name).ThenBy(fn=>fn.FatherName);
             return View(await applicationDbContext.ToListAsync());
         }
 
@@ -66,6 +36,7 @@ namespace SchoolManagementWebApp.Controllers
             }
 
             var student = await _context.Students
+                .Include(g=>g.Grades)
                 .Include(s => s.Class)
                 .FirstOrDefaultAsync(m => m.Id == id);
             if (student == null)
@@ -90,6 +61,14 @@ namespace SchoolManagementWebApp.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Name,FatherName,DateOfBirth,SocialSecurity,ClassId")] Student student)
         {
+            bool StudentExists = await _context.Students
+                .AnyAsync(t => t.SocialSecurity == student.SocialSecurity);
+
+            if (StudentExists)
+            {
+                ModelState.AddModelError("SocialSecurity", "A Student with this Social Security number already exists.");
+                return View(student);
+            }
             if (ModelState.IsValid)
             {
                 _context.Add(student);
