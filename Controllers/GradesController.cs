@@ -22,7 +22,11 @@ namespace SchoolManagementWebApp.Controllers
         // GET: Grades
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Grades.Include(g => g.Class).Include(g => g.Student).Include(g => g.Subject).Include(g => g.Teacher);
+            var applicationDbContext = _context.Grades
+                .Include(g => g.Class)
+                .Include(g => g.Student)
+                .Include(g => g.Subject)
+                .Include(g => g.Teacher);
             return View(await applicationDbContext.ToListAsync());
         }
 

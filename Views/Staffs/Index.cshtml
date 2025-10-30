@@ -1,50 +1,88 @@
-﻿@model IEnumerable<SchoolManagementWebApp.Models.Staff>
+﻿@model SchoolManagementWebApp.ViewModels.StaffTeacherViewModel
 
 @{
     ViewData["Title"] = "teachers and staff";
-    var teacherList = ViewBag.teacher as IEnumerable<SchoolManagementWebApp.Models.Teacher>;
 }
 
 <h1>Index</h1>
 
 <p>
-    <a asp-action="Create">Create New</a>
+    <a asp-action="Create" asp-controller="Staffs">Create New</a>
 </p>
+
 <table class="table">
+<h2>Teachers</h2>
     <thead>
-        <a asp-controller="Teachers" asp-action="Index">Teachers</a>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                Name
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StaffRole)
+                Date of birth
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DateOfBirth)
+                profession
             </th>
-            <th></th>
+            <th>SSN</th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model) {
+        @foreach (var teacher in Model.Teachers) 
+        {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Name)
+                    @teacher.FullName
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.StaffRole.RoleName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.DateOfBirth)
-                </td>
-                <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
-                </td>
+                <td>@teacher.DateOfBirth</td>
+                    <td>
+                    @teacher.FIeldOfProfession
+                    </td>
+                    <td>@teacher.SocialSecurity</td>
+                        <td>
+                        <a asp-controller="Teachers" asp-action="Edit" asp-route-id="@teacher.Id">Edit</a> |
+                            <a asp-controller="Teachers" asp-action="Details" asp-route-id="@teacher.Id">Details</a> |
+                            <a  asp-controller="Teachers" asp-action="Delete" asp-route-id="@teacher.Id">Delete</a>
+                    </td>
             </tr>
         }
+    </tbody>
+</table>
+<table class="table">
+    <h2>Staffs</h2>
+    <thead>
+        <tr>
+            <th>
+                Name
+            </th>
+            <th>
+                Date of birth
+            </th>
+            <th>
+                Role
+            </th>
+            <th>SSN</th>
+        </tr>
+    </thead>
+    <tbody>
+		@foreach (var staff in Model.Staffs)
+		{
+				<tr>
+                        <td >
+					@staff.Name
+					</td>
+					<td >@staff.DateOfBirth</td>
+                            <td >
+					@staff.StaffRole.RoleName
+						</td>
+                            <td >@staff.SocialSecurity</td>
+
+                <td >
+                        <a  asp-controller="Staffs" asp-action="Edit" asp-route-id="@staff.Id">Edit</a> |
+                        <a   asp-controller="Staffs" asp-action="Details" asp-route-id="@staff.Id">Details</a> |
+                        <a   asp-controller="Staffs" asp-action="Delete" asp-route-id="@staff.Id">Delete</a>
+                </td>
+				</tr>
+		}
     </tbody>
 </table>
 

@@ -22,16 +22,18 @@ namespace SchoolManagementWebApp.Controllers
         // GET: Staffs
         public async Task<IActionResult> Index()
         {
-            var staff = await _context.Staffs 
-                .Include(s => s.StaffRole)
-                .ToListAsync();
-            var teachers =await _context.Teachers
-                .OrderBy(fn=>fn.FIeldOfProfession)
-                .ToListAsync();
 
-            ViewBag.teachers = teachers;
+            var vm = new ViewModels.StaffTeacherViewModel
+            {
+                Staffs = await _context.Staffs
+                    .Include(s => s.StaffRole)
+                    .ToListAsync(),
+                Teachers = await _context.Teachers
+                    .ToListAsync()
+            };
 
-            return View(staff);
+
+            return View(vm);
         }
         
 
@@ -66,7 +68,7 @@ namespace SchoolManagementWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name,StaffRoleId,DateOfBirth")] Staff staff)
+        public async Task<IActionResult> Create([Bind("Id,Name,StaffRoleId,DateOfBirth,SocialSecurity")] Staff staff)
         {
             if (ModelState.IsValid)
             {
@@ -91,7 +93,7 @@ namespace SchoolManagementWebApp.Controllers
             {
                 return NotFound();
             }
-            ViewData["StaffRoleId"] = new SelectList(_context.StaffRoles, "Id", "Id", staff.StaffRoleId);
+            ViewData["StaffRoleId"] = new SelectList(_context.StaffRoles, "Id", "RoleName", staff.StaffRoleId);
             return View(staff);
         }
 
@@ -100,7 +102,7 @@ namespace SchoolManagementWebApp.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,StaffRoleId,DateOfBirth")] Staff staff)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,Name,StaffRoleId,DateOfBirth,SocialSecurity")] Staff staff)
         {
             if (id != staff.Id)
             {
@@ -127,7 +129,7 @@ namespace SchoolManagementWebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["StaffRoleId"] = new SelectList(_context.StaffRoles, "Id", "Id", staff.StaffRoleId);
+            ViewData["StaffRoleId"] = new SelectList(_context.StaffRoles, "Id", "RoleName", staff.StaffRoleId);
             return View(staff);
         }
 

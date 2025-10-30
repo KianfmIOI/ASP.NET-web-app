@@ -18,7 +18,7 @@ namespace SchoolManagementWebApp.Models
         [Required]
         [DataType(DataType.Date)]
         [Display(Name = "Date of Birth")]
-        public DateTime DateOfBirth { get; set; }
+        public DateOnly DateOfBirth { get; set; }
         [Required]
         [Display(Name ="Social security number")]
         [StringLength(10)]
