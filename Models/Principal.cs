@@ -1,4 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace SchoolManagementWebApp.Models
 {
@@ -9,5 +10,10 @@ namespace SchoolManagementWebApp.Models
 
         [Required]
         public string FullName { get; set; } = string.Empty;
+        
+        public string? UserId { get; set; }
+        [ForeignKey("UserId")]
+        public ApplicationUser? User { get; set; }
+
     }
 }

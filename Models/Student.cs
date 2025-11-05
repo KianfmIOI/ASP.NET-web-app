@@ -26,6 +26,9 @@ namespace SchoolManagementWebApp.Models
         public int? ClassId { get; set; }
         public Class? Class { get; set; }
         public ICollection<Grade> Grades { get; set; } = new List<Grade>();
+        public string? UserId { get; set; }
+        [ForeignKey("UserId")]
+        public ApplicationUser? User { get; set; }
 
     }
 }

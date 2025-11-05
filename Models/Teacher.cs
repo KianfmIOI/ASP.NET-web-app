@@ -29,5 +29,9 @@ namespace SchoolManagementWebApp.Models
 
         public ICollection<ClassSubjectTeacher> ClassSubjectTeachers { get; set; } = new List<ClassSubjectTeacher>();
 
+        public string? UserId { get; set; }
+        [ForeignKey("UserId")]
+        public ApplicationUser? User { get; set; }
+
     }
 }

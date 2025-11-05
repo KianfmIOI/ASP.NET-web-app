@@ -34,13 +34,15 @@
   <path d="M8.707 1.5a1 1 0 0 0-1.414 0L.646 8.146a.5.5 0 0 0 .708.708L2 8.207V13.5A1.5 1.5 0 0 0 3.5 15h9a1.5 1.5 0 0 0 1.5-1.5V8.207l.646.647a.5.5 0 0 0 .708-.708L13 5.793V2.5a.5.5 0 0 0-.5-.5h-1a.5.5 0 0 0-.5.5v1.293zM13 7.207V13.5a.5.5 0 0 1-.5.5h-9a.5.5 0 0 1-.5-.5V7.207l5-5z"/>
 </svg>
 <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
-                        
+                        @*
+
                         <li class="nav-item d-flex justify-content-space-between align-items-center">
                             
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock" viewBox="0 0 16 16">
   <path fill-rule="evenodd" d="M8 0a4 4 0 0 1 4 4v2.05a2.5 2.5 0 0 1 2 2.45v5a2.5 2.5 0 0 1-2.5 2.5h-7A2.5 2.5 0 0 1 2 13.5v-5a2.5 2.5 0 0 1 2-2.45V4a4 4 0 0 1 4-4M4.5 7A1.5 1.5 0 0 0 3 8.5v5A1.5 1.5 0 0 0 4.5 15h7a1.5 1.5 0 0 0 1.5-1.5v-5A1.5 1.5 0 0 0 11.5 7zM8 1a3 3 0 0 0-3 3v2h6V4a3 3 0 0 0-3-3"/>
 </svg>
                             <a class="nav-link text-white" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a></li>
+                        *@
                         
                         <li class="nav-item d-flex justify-content-space-between align-items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-workspace" viewBox="0 0 16 16">
@@ -85,9 +87,6 @@
                         
                         <li class="nav-item d-flex justify-content-space-between align-items-center"><a class="nav-link text-white" asp-area="" asp-controller="StaffRoles" asp-action="Index">StaffRoles</a></li>
                         
-                        <li> </li>
-                        <li> </li>
-                        <li> </li>
 
                         <li class="nav-item d-flex justify-content-space-between align-items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pen" viewBox="0 0 16 16">
@@ -95,7 +94,7 @@
 </svg>
 <a class="nav-link text-white" asp-area="" asp-controller="Grades" asp-action="Index">Grades</a></li>
 
-                        <li class="nav-item d-flex justify-content-space-between align-items-center">
+                        @*<li class="nav-item d-flex justify-content-space-between align-items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-raised-hand" viewBox="0 0 16 16">
   <path d="M6 6.207v9.043a.75.75 0 0 0 1.5 0V10.5a.5.5 0 0 1 1 0v4.75a.75.75 0 0 0 1.5 0v-8.5a.25.25 0 1 1 .5 0v2.5a.75.75 0 0 0 1.5 0V6.5a3 3 0 0 0-3-3H6.236a1 1 0 0 1-.447-.106l-.33-.165A.83.83 0 0 1 5 2.488V.75a.75.75 0 0 0-1.5 0v2.083c0 .715.404 1.37 1.044 1.689L5.5 5c.32.32.5.754.5 1.207"/>
   <path d="M8 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
@@ -104,6 +103,7 @@
                                Attendance
                               </a>
                         </li>
+                        *@
                     </ul>
                     <hr class="text-white w-100">
                     <partial name="_LoginPartial" />
@@ -116,13 +116,14 @@
                         @RenderBody()
                 </div>
             </main>
-    </div>
-
-    <footer class="border-top footer text-muted">
+            <footer class="footer text-muted text-center">
         <div class="container text-white">
-            &copy; 2025 - SchoolManagementWebApp - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2025 - SchoolManagementWebApp - 
         </div>
     </footer>
+    </div>
+
+    
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
