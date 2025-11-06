@@ -1,0 +1,69 @@
+﻿@model SchoolManagementWebApp.ViewModels.ClassScheduleViewModel
+@{
+    ViewData["Title"] = "Details";
+    var schedules = Model.ClassSubjectTeachers.SelectMany(sc => sc.Schedule).ToList();
+    var timeSlots= schedules
+    .Where(s => s.TimeSlot != null)
+        .Select(s => s.TimeSlot)
+        .Distinct()
+        .OrderBy(ts => ts.StartingTime) 
+        .ToList();
+    var orderedDays = Enum.GetValues(typeof(DayOfWeek))
+     .Cast<DayOfWeek>()
+     .OrderBy(d => (d >= DayOfWeek.Saturday) ? (int)d : (int)d + 7)
+     .ToList();
+}
+
+<h1>Schedule</h1>
+
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>
+                Days
+            </th>
+            @foreach (var s in timeSlots)
+            {
+                @if (s != null)
+                {
+
+                    <th>
+                        Time 
+
+                        @Html.DisplayFor(modelItem => s.SessionNumber)
+                        <br/>
+
+                        (@s.StartingTime.ToString("hh\\:mm")  - @s.EndingTime.ToString("hh\\:mm"))
+                    </th>
+                }
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var day in orderedDays)
+        {
+            <tr>
+                <td><strong>@day</strong></td>
+                @foreach (var item in schedules)
+                {
+                    foreach(var t in timeSlots)
+                    {
+                        
+                    if(item == null)
+                    {
+                        <td>not assigend</td>
+                    }
+                    else if (item.DayOfWeek == @day) 
+                    {
+
+                        <td>
+                            @Html.DisplayFor(modelItem => item.ClassSubjectTeacher.Subject.SubjectName) -
+                            @Html.DisplayFor(modelItem => item.ClassSubjectTeacher.Teacher.FullName)
+                                </td>        
+                    }
+                    }
+                }
+                </tr>
+        }
+    </tbody>
+</table>

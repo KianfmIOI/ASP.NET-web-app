@@ -1,4 +1,4 @@
-﻿@model SchoolManagementWebApp.Models.SchoolManagementWebApp.Models.Grade
+﻿@model SchoolManagementWebApp.Models.Attendance
 
 @{
     ViewData["Title"] = "Details";
@@ -7,7 +7,7 @@
 <h1>Details</h1>
 
 <div>
-    <h4>Grade</h4>
+    <h4>Attendance</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -17,22 +17,22 @@
             @Html.DisplayFor(model => model.Student.FatherName)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.comment)
+            @Html.DisplayNameFor(model => model.ClassSubjectTeacher)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.comment)
+            @Html.DisplayFor(model => model.ClassSubjectTeacher.Id)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Score)
+            @Html.DisplayNameFor(model => model.Date)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Score)
+            @Html.DisplayFor(model => model.Date)
         </dd>
         <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.DateAssigned)
+            @Html.DisplayNameFor(model => model.IsPresent)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.DateAssigned)
+            @Html.DisplayFor(model => model.IsPresent)
         </dd>
     </dl>
 </div>

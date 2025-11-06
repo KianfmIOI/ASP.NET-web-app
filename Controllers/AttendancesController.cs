@@ -6,34 +6,34 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using SchoolManagementWebApp.Data;
-using SchoolManagementWebApp.Models.SchoolManagementWebApp.Models;
+using SchoolManagementWebApp.Models;
 
 namespace SchoolManagementWebApp.Controllers
 {
-    public class GradesController : Controller
+    public class AttendancesController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public GradesController(ApplicationDbContext context)
+        public AttendancesController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Grades
+        // GET: Attendances
         public async Task<IActionResult> Index()
         {
-            var applicationDbContext = _context.Grades
+            var applicationDbContext = _context.Attendances
                 .Include(a => a.ClassSubjectTeacher)
                 .ThenInclude(c => c.Class)
                 .Include(s => s.ClassSubjectTeacher)
                 .ThenInclude(t => t.Teacher)
                 .Include(s => s.ClassSubjectTeacher)
                 .ThenInclude(s => s.Subject)
-                .Include(g => g.Student).OrderBy(n=>n.Student.Name);
+                .Include(a => a.Student);
             return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Grades/Details/5
+        // GET: Attendances/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -41,19 +41,19 @@ namespace SchoolManagementWebApp.Controllers
                 return NotFound();
             }
 
-            var grade = await _context.Grades
-                .Include(g => g.ClassSubjectTeacher)
-                .Include(g => g.Student)
+            var attendance = await _context.Attendances
+                .Include(a => a.ClassSubjectTeacher)
+                .Include(a => a.Student)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (grade == null)
+            if (attendance == null)
             {
                 return NotFound();
             }
 
-            return View(grade);
+            return View(attendance);
         }
 
-        // GET: Grades/Create
+        // GET: Attendances/Create
         public IActionResult Create()
         {
             var classSubjectTeachersList = _context.ClassSubjectTeachers
@@ -71,25 +71,25 @@ namespace SchoolManagementWebApp.Controllers
             return View();
         }
 
-        // POST: Grades/Create
+        // POST: Attendances/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,StudentId,ClassSubjectTeacherId,comment,Score,DateAssigned")] Grade grade)
+        public async Task<IActionResult> Create([Bind("Id,StudentId,ClassSubjectTeacherId,Date,IsPresent")] Attendance attendance)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(grade);
+                _context.Add(attendance);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClassSubjectTeacherId"] = new SelectList(_context.ClassSubjectTeachers, "Id", "Id", grade.ClassSubjectTeacherId);
-            ViewData["StudentId"] = new SelectList(_context.Students, "Id", "FatherName", grade.StudentId);
-            return View(grade);
+            ViewData["ClassSubjectTeacherId"] = new SelectList(_context.ClassSubjectTeachers, "Id", "Id", attendance.ClassSubjectTeacherId);
+            ViewData["StudentId"] = new SelectList(_context.Students, "Id", "FatherName", attendance.StudentId);
+            return View(attendance);
         }
 
-        // GET: Grades/Edit/5
+        // GET: Attendances/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -97,33 +97,34 @@ namespace SchoolManagementWebApp.Controllers
                 return NotFound();
             }
 
-            var grade = await _context.Grades.FindAsync(id);
-            if (grade == null)
+            var attendance = await _context.Attendances.FindAsync(id);
+            if (attendance == null)
             {
                 return NotFound();
             }
             var classSubjectTeachersList = _context.ClassSubjectTeachers
-                    .Include(c => c.Class)
-                    .Include(c => c.Subject)
-                    .Include(c => c.Teacher)
-                    .Select(c => new
-                    {
-                        Id = c.Id,
-                        DisplayName = c.Class.Name + " - " + c.Subject.SubjectName + " - " + c.Teacher.FullName
-                    }).ToList();
+        .Include(c => c.Class)
+        .Include(c => c.Subject)
+        .Include(c => c.Teacher)
+        .Select(c => new
+        {
+            Id = c.Id,
+            DisplayName = c.Class.Name + " - " + c.Subject.SubjectName + " - " + c.Teacher.FullName
+        }).ToList();
 
-            ViewData["ClassSubjectTeacherId"] = new SelectList(classSubjectTeachersList, "Id", "DisplayName"); ViewData["StudentId"] = new SelectList(_context.Students, "Id", "FatherName", grade.StudentId);
-            return View(grade);
+            ViewData["ClassSubjectTeacherId"] = new SelectList(classSubjectTeachersList, "Id", "DisplayName");
+            ViewData["StudentId"] = new SelectList(_context.Students, "Id", "FatherName", attendance.StudentId);
+            return View(attendance);
         }
 
-        // POST: Grades/Edit/5
+        // POST: Attendances/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,StudentId,ClassSubjectTeacherId,comment,Score,DateAssigned")] Grade grade)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,StudentId,ClassSubjectTeacherId,Date,IsPresent")] Attendance attendance)
         {
-            if (id != grade.Id)
+            if (id != attendance.Id)
             {
                 return NotFound();
             }
@@ -132,12 +133,12 @@ namespace SchoolManagementWebApp.Controllers
             {
                 try
                 {
-                    _context.Update(grade);
+                    _context.Update(attendance);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!GradeExists(grade.Id))
+                    if (!AttendanceExists(attendance.Id))
                     {
                         return NotFound();
                     }
@@ -148,12 +149,12 @@ namespace SchoolManagementWebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["ClassSubjectTeacherId"] = new SelectList(_context.ClassSubjectTeachers, "Id", "Id", grade.ClassSubjectTeacherId);
-            ViewData["StudentId"] = new SelectList(_context.Students, "Id", "FatherName", grade.StudentId);
-            return View(grade);
+            ViewData["ClassSubjectTeacherId"] = new SelectList(_context.ClassSubjectTeachers, "Id", "Id", attendance.ClassSubjectTeacherId);
+            ViewData["StudentId"] = new SelectList(_context.Students, "Id", "FatherName", attendance.StudentId);
+            return View(attendance);
         }
 
-        // GET: Grades/Delete/5
+        // GET: Attendances/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -161,36 +162,36 @@ namespace SchoolManagementWebApp.Controllers
                 return NotFound();
             }
 
-            var grade = await _context.Grades
-                .Include(g => g.ClassSubjectTeacher)
-                .Include(g => g.Student)
+            var attendance = await _context.Attendances
+                .Include(a => a.ClassSubjectTeacher)
+                .Include(a => a.Student)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (grade == null)
+            if (attendance == null)
             {
                 return NotFound();
             }
 
-            return View(grade);
+            return View(attendance);
         }
 
-        // POST: Grades/Delete/5
+        // POST: Attendances/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var grade = await _context.Grades.FindAsync(id);
-            if (grade != null)
+            var attendance = await _context.Attendances.FindAsync(id);
+            if (attendance != null)
             {
-                _context.Grades.Remove(grade);
+                _context.Attendances.Remove(attendance);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool GradeExists(int id)
+        private bool AttendanceExists(int id)
         {
-            return _context.Grades.Any(e => e.Id == id);
+            return _context.Attendances.Any(e => e.Id == id);
         }
     }
 }

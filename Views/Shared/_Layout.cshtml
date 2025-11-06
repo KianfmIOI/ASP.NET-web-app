@@ -49,7 +49,12 @@
   <path d="M4 16s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-5.95a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
   <path d="M2 1a2 2 0 0 0-2 2v9.5A1.5 1.5 0 0 0 1.5 14h.653a5.4 5.4 0 0 1 1.066-2H1V3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v9h-2.219c.554.654.89 1.373 1.066 2h.653a1.5 1.5 0 0 0 1.5-1.5V3a2 2 0 0 0-2-2z"/>
 </svg>
-                            <a class="nav-link text-white" asp-area="" asp-controller="Classes" asp-action="Index">Classes</a></li>
+                            <a class="nav-link text-white" asp-area="" asp-controller="Classes" asp-action="Index">Classes</a>
+                        </li>
+                        <li class="nav-item d-flex justify-content-space-between align-items-center">
+                            
+                            <a class="nav-link text-white" asp-area="" asp-controller="Classes" asp-action="Schedule">Classes Schedule</a>
+                        </li>
                         
                         <li class="nav-item d-flex justify-content-space-between align-items-center">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-add" viewBox="0 0 16 16">
@@ -85,7 +90,12 @@
 </svg>
 <a class="nav-link text-white" asp-area="" asp-controller="Staffs" asp-action="Index">Staffs</a></li>
                         
-                        <li class="nav-item d-flex justify-content-space-between align-items-center"><a class="nav-link text-white" asp-area="" asp-controller="StaffRoles" asp-action="Index">StaffRoles</a></li>
+                        <li class="nav-item d-flex justify-content-space-between align-items-center">
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-vcard" viewBox="0 0 16 16">
+  <path d="M5 8a2 2 0 1 0 0-4 2 2 0 0 0 0 4m4-2.5a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4a.5.5 0 0 1-.5-.5M9 8a.5.5 0 0 1 .5-.5h4a.5.5 0 0 1 0 1h-4A.5.5 0 0 1 9 8m1 2.5a.5.5 0 0 1 .5-.5h3a.5.5 0 0 1 0 1h-3a.5.5 0 0 1-.5-.5"/>
+  <path d="M2 2a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V4a2 2 0 0 0-2-2zM1 4a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H8.96q.04-.245.04-.5C9 10.567 7.21 9 5 9c-2.086 0-3.8 1.398-3.984 3.181A1 1 0 0 1 1 12z"/>
+</svg>
+                            <a class="nav-link text-white" asp-area="" asp-controller="StaffRoles" asp-action="Index">StaffRoles</a></li>
                         
 
                         <li class="nav-item d-flex justify-content-space-between align-items-center">
@@ -104,6 +114,31 @@
                               </a>
                         </li>
                         *@
+                        <li class="nav-item d-flex justify-content-space-between align-items-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-person-raised-hand" viewBox="0 0 16 16">
+  <path d="M6 6.207v9.043a.75.75 0 0 0 1.5 0V10.5a.5.5 0 0 1 1 0v4.75a.75.75 0 0 0 1.5 0v-8.5a.25.25 0 1 1 .5 0v2.5a.75.75 0 0 0 1.5 0V6.5a3 3 0 0 0-3-3H6.236a1 1 0 0 1-.447-.106l-.33-.165A.83.83 0 0 1 5 2.488V.75a.75.75 0 0 0-1.5 0v2.083c0 .715.404 1.37 1.044 1.689L5.5 5c.32.32.5.754.5 1.207"/>
+  <path d="M8 3a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+</svg>
+<a class="nav-link text-white" asp-controller="Attendances" asp-action="Index" >
+                               Attendance
+                              </a>
+                        </li>
+                                                <li class="nav-item d-flex justify-content-space-between align-items-center">
+                                                    <a class="nav-link text-white" asp-controller="TimeSlots" asp-action="Index" >
+                               TimeSlots
+                              </a>
+                                                </li>
+                                                <li class="nav-item d-flex justify-content-space-between align-items-center">
+                                                    <a class="nav-link text-white" asp-controller="Exams" asp-action="Index" >
+                               Exams
+                              </a>
+                                                </li>
+                                                <li class="nav-item d-flex justify-content-space-between align-items-center">
+                                                    <a class="nav-link text-white" asp-controller="Schedules" asp-action="Index" >
+                               Schedule
+                              </a>
+                                                </li>
+
                     </ul>
                     <hr class="text-white w-100">
                     <partial name="_LoginPartial" />

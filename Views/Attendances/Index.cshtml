@@ -1,4 +1,4 @@
-﻿@model IEnumerable<SchoolManagementWebApp.Models.SchoolManagementWebApp.Models.Grade>
+﻿@model IEnumerable<SchoolManagementWebApp.Models.Attendance>
 
 @{
     ViewData["Title"] = "Index";
@@ -19,13 +19,10 @@
                 @Html.DisplayNameFor(model => model.ClassSubjectTeacher)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.comment)
+                @Html.DisplayNameFor(model => model.Date)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Score)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.DateAssigned)
+                @Html.DisplayNameFor(model => model.IsPresent)
             </th>
             <th></th>
         </tr>
@@ -42,13 +39,10 @@
                     @Html.DisplayFor(modelItem => item.ClassSubjectTeacher.Teacher.FullName)
                     </td>
             <td>
-                @Html.DisplayFor(modelItem => item.comment)
+                @Html.DisplayFor(modelItem => item.Date)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Score)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.DateAssigned)
+                @Html.DisplayFor(modelItem => item.IsPresent)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

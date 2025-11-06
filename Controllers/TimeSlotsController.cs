@@ -10,36 +10,22 @@ using SchoolManagementWebApp.Models;
 
 namespace SchoolManagementWebApp.Controllers
 {
-    public class ClassesController : Controller
+    public class TimeSlotsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public ClassesController(ApplicationDbContext context)
+        public TimeSlotsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Classes
+        // GET: TimeSlots
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Classes.ToListAsync());
-        }
-        public async Task<IActionResult> Schedule()
-        {
-            var vm = new ViewModels.ClassScheduleViewModel
-            {
-                ClassSubjectTeachers = await _context.ClassSubjectTeachers
-                    .ToListAsync(),
-                Schedules = await _context.Schedules
-                .Include(ts=>ts.TimeSlot)
-                    .ToListAsync()
-            };
-
-
-            return View(vm);
+            return View(await _context.TimeSlots.ToListAsync());
         }
 
-        // GET: Classes/Details/5
+        // GET: TimeSlots/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -47,48 +33,39 @@ namespace SchoolManagementWebApp.Controllers
                 return NotFound();
             }
 
-            var @class = await _context.Classes
-                .Include(s=>s.Students)
-                .Include(cst=>cst.ClassSubjectTeachers)
-                .ThenInclude(t=>t.Teacher)
-                .Include(cst=>cst.ClassSubjectTeachers)
-                .ThenInclude(s=>s.Subject)
-
-                .Include(cst => cst.ClassSubjectTeachers)
-                .ThenInclude(sch=>sch.Schedule)
-                .ThenInclude(ts=>ts.TimeSlot)
+            var timeSlot = await _context.TimeSlots
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (@class == null)
+            if (timeSlot == null)
             {
                 return NotFound();
             }
 
-            return View(@class);
+            return View(timeSlot);
         }
 
-        // GET: Classes/Create
+        // GET: TimeSlots/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Classes/Create
+        // POST: TimeSlots/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] Class @class)
+        public async Task<IActionResult> Create([Bind("Id,SessionNumber,StartingTime,EndingTime")] TimeSlot timeSlot)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(@class);
+                _context.Add(timeSlot);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(@class);
+            return View(timeSlot);
         }
 
-        // GET: Classes/Edit/5
+        // GET: TimeSlots/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -96,22 +73,22 @@ namespace SchoolManagementWebApp.Controllers
                 return NotFound();
             }
 
-            var @class = await _context.Classes.FindAsync(id);
-            if (@class == null)
+            var timeSlot = await _context.TimeSlots.FindAsync(id);
+            if (timeSlot == null)
             {
                 return NotFound();
             }
-            return View(@class);
+            return View(timeSlot);
         }
 
-        // POST: Classes/Edit/5
+        // POST: TimeSlots/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Class @class)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,SessionNumber,StartingTime,EndingTime")] TimeSlot timeSlot)
         {
-            if (id != @class.Id)
+            if (id != timeSlot.Id)
             {
                 return NotFound();
             }
@@ -120,12 +97,12 @@ namespace SchoolManagementWebApp.Controllers
             {
                 try
                 {
-                    _context.Update(@class);
+                    _context.Update(timeSlot);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ClassExists(@class.Id))
+                    if (!TimeSlotExists(timeSlot.Id))
                     {
                         return NotFound();
                     }
@@ -136,10 +113,10 @@ namespace SchoolManagementWebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(@class);
+            return View(timeSlot);
         }
 
-        // GET: Classes/Delete/5
+        // GET: TimeSlots/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -147,34 +124,34 @@ namespace SchoolManagementWebApp.Controllers
                 return NotFound();
             }
 
-            var @class = await _context.Classes
+            var timeSlot = await _context.TimeSlots
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (@class == null)
+            if (timeSlot == null)
             {
                 return NotFound();
             }
 
-            return View(@class);
+            return View(timeSlot);
         }
 
-        // POST: Classes/Delete/5
+        // POST: TimeSlots/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var @class = await _context.Classes.FindAsync(id);
-            if (@class != null)
+            var timeSlot = await _context.TimeSlots.FindAsync(id);
+            if (timeSlot != null)
             {
-                _context.Classes.Remove(@class);
+                _context.TimeSlots.Remove(timeSlot);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ClassExists(int id)
+        private bool TimeSlotExists(int id)
         {
-            return _context.Classes.Any(e => e.Id == id);
+            return _context.TimeSlots.Any(e => e.Id == id);
         }
     }
 }

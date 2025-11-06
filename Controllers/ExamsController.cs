@@ -10,36 +10,23 @@ using SchoolManagementWebApp.Models;
 
 namespace SchoolManagementWebApp.Controllers
 {
-    public class ClassesController : Controller
+    public class ExamsController : Controller
     {
         private readonly ApplicationDbContext _context;
 
-        public ClassesController(ApplicationDbContext context)
+        public ExamsController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: Classes
+        // GET: Exams
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Classes.ToListAsync());
-        }
-        public async Task<IActionResult> Schedule()
-        {
-            var vm = new ViewModels.ClassScheduleViewModel
-            {
-                ClassSubjectTeachers = await _context.ClassSubjectTeachers
-                    .ToListAsync(),
-                Schedules = await _context.Schedules
-                .Include(ts=>ts.TimeSlot)
-                    .ToListAsync()
-            };
-
-
-            return View(vm);
+            var applicationDbContext = _context.Exams.Include(e => e.Subject);
+            return View(await applicationDbContext.ToListAsync());
         }
 
-        // GET: Classes/Details/5
+        // GET: Exams/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -47,48 +34,42 @@ namespace SchoolManagementWebApp.Controllers
                 return NotFound();
             }
 
-            var @class = await _context.Classes
-                .Include(s=>s.Students)
-                .Include(cst=>cst.ClassSubjectTeachers)
-                .ThenInclude(t=>t.Teacher)
-                .Include(cst=>cst.ClassSubjectTeachers)
-                .ThenInclude(s=>s.Subject)
-
-                .Include(cst => cst.ClassSubjectTeachers)
-                .ThenInclude(sch=>sch.Schedule)
-                .ThenInclude(ts=>ts.TimeSlot)
+            var exam = await _context.Exams
+                .Include(e => e.Subject)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (@class == null)
+            if (exam == null)
             {
                 return NotFound();
             }
 
-            return View(@class);
+            return View(exam);
         }
 
-        // GET: Classes/Create
+        // GET: Exams/Create
         public IActionResult Create()
         {
+            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "SubjectName");
             return View();
         }
 
-        // POST: Classes/Create
+        // POST: Exams/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] Class @class)
+        public async Task<IActionResult> Create([Bind("Id,SubjectId,ExamDate,EndingTime,ExamDetails")] Exam exam)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(@class);
+                _context.Add(exam);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(@class);
+            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "SubjectName", exam.SubjectId);
+            return View(exam);
         }
 
-        // GET: Classes/Edit/5
+        // GET: Exams/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -96,22 +77,23 @@ namespace SchoolManagementWebApp.Controllers
                 return NotFound();
             }
 
-            var @class = await _context.Classes.FindAsync(id);
-            if (@class == null)
+            var exam = await _context.Exams.FindAsync(id);
+            if (exam == null)
             {
                 return NotFound();
             }
-            return View(@class);
+            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "SubjectName", exam.SubjectId);
+            return View(exam);
         }
 
-        // POST: Classes/Edit/5
+        // POST: Exams/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] Class @class)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,SubjectId,ExamDate,EndingTime,ExamDetails")] Exam exam)
         {
-            if (id != @class.Id)
+            if (id != exam.Id)
             {
                 return NotFound();
             }
@@ -120,12 +102,12 @@ namespace SchoolManagementWebApp.Controllers
             {
                 try
                 {
-                    _context.Update(@class);
+                    _context.Update(exam);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!ClassExists(@class.Id))
+                    if (!ExamExists(exam.Id))
                     {
                         return NotFound();
                     }
@@ -136,10 +118,11 @@ namespace SchoolManagementWebApp.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(@class);
+            ViewData["SubjectId"] = new SelectList(_context.Subjects, "Id", "SubjectName", exam.SubjectId);
+            return View(exam);
         }
 
-        // GET: Classes/Delete/5
+        // GET: Exams/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -147,34 +130,35 @@ namespace SchoolManagementWebApp.Controllers
                 return NotFound();
             }
 
-            var @class = await _context.Classes
+            var exam = await _context.Exams
+                .Include(e => e.Subject)
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (@class == null)
+            if (exam == null)
             {
                 return NotFound();
             }
 
-            return View(@class);
+            return View(exam);
         }
 
-        // POST: Classes/Delete/5
+        // POST: Exams/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var @class = await _context.Classes.FindAsync(id);
-            if (@class != null)
+            var exam = await _context.Exams.FindAsync(id);
+            if (exam != null)
             {
-                _context.Classes.Remove(@class);
+                _context.Exams.Remove(exam);
             }
 
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ClassExists(int id)
+        private bool ExamExists(int id)
         {
-            return _context.Classes.Any(e => e.Id == id);
+            return _context.Exams.Any(e => e.Id == id);
         }
     }
 }

@@ -15,5 +15,6 @@ namespace SchoolManagementWebApp.Models
 
         public int TeacherId { get; set; }
         public Teacher? Teacher { get; set; }
+        public ICollection<Schedule> Schedule { get; set; } = new List<Schedule>();
     }
 }

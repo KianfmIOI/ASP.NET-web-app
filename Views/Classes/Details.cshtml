@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Details";
+    var schedules = Model.ClassSubjectTeachers.SelectMany(cst => cst.Schedule).ToList();
 }
 
 <h1>Details</h1>
@@ -20,6 +21,8 @@
 </div>
 
 
+
+
 <h1>Teachers</h1>
 
 <table class="table">
@@ -32,19 +35,26 @@
                 Subject
             </th>
         </tr>
+    </thead>
     <tbody>
-            @foreach (var s in Model.ClassSubjectTeachers)
-            {
+        @foreach (var s in Model.ClassSubjectTeachers)
+        {
+           
+                
                 <tr>
                     <td>
+                        @if (s.Teacher != null)
                         @Html.DisplayFor(modelItem => s.Teacher.FullName)
                     </td>
                         <td>
+                    @if (s.Subject != null)
+
                         @Html.DisplayFor(modelItem => s.Subject.SubjectName)
                         </td>
 
                 </tr>
-            }
+            
+        }
     </tbody>
 </table>
 <h1>Students</h1>
@@ -59,6 +69,7 @@
                 Father's Name
             </th>
         </tr>
+        </thead>
     <tbody>
             @foreach (var s in Model.Students)
             {

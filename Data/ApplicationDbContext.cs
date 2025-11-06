@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using SchoolManagementWebApp.Models;
 using SchoolManagementWebApp.Models.SchoolManagementWebApp.Models;
 using System.Diagnostics;
+using System.Reflection.Emit;
 
 namespace SchoolManagementWebApp.Data;
 
@@ -23,7 +24,12 @@ public class ApplicationDbContext : IdentityDbContext
     public DbSet<ClassSubjectTeacher> ClassSubjectTeachers { get; set; }
     public DbSet<Staff> Staffs { get; set; }
     public DbSet<StaffRole> StaffRoles { get; set; }
-    
+
+    public DbSet<TimeSlot> TimeSlots { get; set; }
+    public DbSet<Exam> Exams { get; set; }
+    public DbSet<Schedule> Schedules { get; set; }
+
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         builder.Entity<Student>()
@@ -41,7 +47,16 @@ public class ApplicationDbContext : IdentityDbContext
         builder.Entity<Staff>()
             .HasOne(r => r.StaffRole)
             .WithMany(s => s.Staffs);
-        
+
+        builder.Entity<Exam>()
+            .HasIndex(dt => dt.ExamDate)
+            .IsUnique();
+        builder.Entity<TimeSlot>()
+            .HasIndex(st => st.StartingTime)
+            .IsUnique();
+        builder.Entity<Schedule>()
+        .HasIndex(s => new { s.DayOfWeek, s.TimeSlotId, s.ClassSubjectTeacherId })
+        .IsUnique();
         base.OnModelCreating(builder);
     }
 }

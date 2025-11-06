@@ -13,26 +13,18 @@ namespace SchoolManagementWebApp.Models
 
             [Required]
             public int StudentId { get; set; }
-            public Student Student { get; set; } = null!;
+            public Student? Student { get; set; }
 
             [Required]
-            public int TeacherId { get; set; }
-            public Teacher Teacher { get; set; } = null!;
-
-            [Required]
-            public int SubjectId { get; set; }
-            public Subject Subject { get; set; } = null!;
-
-            [Required]
-            public int ClassId { get; set; }
-            public Class Class { get; set; } = null!;
+            public int ClassSubjectTeacherId { get; set; }
+            public ClassSubjectTeacher? ClassSubjectTeacher { get; set; }
 
             public string? comment { get; set; }
             [Range(0, 20)]
             public float Score { get; set; }
 
             [DataType(DataType.Date)]
-            public DateTime DateAssigned { get; set; } = DateTime.Now;
+            public DateTime DateAssigned { get; set; }
         }
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using SchoolManagementWebApp.Data;
 
@@ -11,9 +12,11 @@ using SchoolManagementWebApp.Data;
 namespace SchoolManagementWebApp.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251106050853_AttendanceChanges")]
+    partial class AttendanceChanges
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -507,91 +510,6 @@ namespace SchoolManagementWebApp.Data.Migrations
                     b.ToTable("Teachers");
                 });
 
-            modelBuilder.Entity("SchoolManagementWebApp.Models.schedule.Exam", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<TimeOnly>("EndingTime")
-                        .HasColumnType("time");
-
-                    b.Property<DateTime>("ExamDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("ExamDetails")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("SubjectId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ExamDate")
-                        .IsUnique();
-
-                    b.HasIndex("SubjectId");
-
-                    b.ToTable("Exams");
-                });
-
-            modelBuilder.Entity("SchoolManagementWebApp.Models.schedule.Schedule", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("ClassSubjectTeacherId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("DayOfWeek")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TimeSlotId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("ClassSubjectTeacherId");
-
-                    b.HasIndex("TimeSlotId");
-
-                    b.HasIndex("DayOfWeek", "TimeSlotId", "ClassSubjectTeacherId")
-                        .IsUnique();
-
-                    b.ToTable("Schedules");
-                });
-
-            modelBuilder.Entity("SchoolManagementWebApp.Models.schedule.TimeSlot", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<TimeOnly>("EndingTime")
-                        .HasColumnType("time");
-
-                    b.Property<int>("SessionNumber")
-                        .HasColumnType("int");
-
-                    b.Property<TimeOnly>("StartingTime")
-                        .HasColumnType("time");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("StartingTime")
-                        .IsUnique();
-
-                    b.ToTable("TimeSlots");
-                });
-
             modelBuilder.Entity("SchoolManagementWebApp.Models.ApplicationUser", b =>
                 {
                     b.HasBaseType("Microsoft.AspNetCore.Identity.IdentityUser");
@@ -770,36 +688,6 @@ namespace SchoolManagementWebApp.Data.Migrations
                         .HasForeignKey("UserId");
 
                     b.Navigation("User");
-                });
-
-            modelBuilder.Entity("SchoolManagementWebApp.Models.schedule.Exam", b =>
-                {
-                    b.HasOne("SchoolManagementWebApp.Models.Subject", "Subject")
-                        .WithMany()
-                        .HasForeignKey("SubjectId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Subject");
-                });
-
-            modelBuilder.Entity("SchoolManagementWebApp.Models.schedule.Schedule", b =>
-                {
-                    b.HasOne("SchoolManagementWebApp.Models.ClassSubjectTeacher", "ClassSubjectTeacher")
-                        .WithMany()
-                        .HasForeignKey("ClassSubjectTeacherId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("SchoolManagementWebApp.Models.schedule.TimeSlot", "TimeSlot")
-                        .WithMany()
-                        .HasForeignKey("TimeSlotId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("ClassSubjectTeacher");
-
-                    b.Navigation("TimeSlot");
                 });
 
             modelBuilder.Entity("SchoolManagementWebApp.Models.Class", b =>
